@@ -2,7 +2,7 @@
   <!-- html 태그는 template 안에 -->
   <div> <!-- 에러는 아니지만, 감싸줘야 한다. <></>같은 느낌 -->
     <h1>Hello {{ userName }}!</h1>
-    <p></p>
+    <p>{{ message }}</p>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       userName: 'chanCo',
-      message: ''
+      message: 'Welcome ~~'
     }
   }
 }
