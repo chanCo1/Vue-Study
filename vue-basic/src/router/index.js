@@ -57,6 +57,24 @@ const routes = [
     name: 'DataBindingAttributeView',
     component: () =>
       import(/* webpackChunkName: "databinding", webpackPrefetch: true  */ '../views/1_databinfding/DataBindingAttributeView.vue')
+  },
+  {
+    path: '/databinding/list',
+    name: 'DataBindingListView',
+    component: () =>
+      import(/* webpackChunkName: "databinding", webpackPrefetch: true  */ '../views/1_databinfding/DataBindingListView.vue')
+  },
+  {
+    path: '/databinding/class',
+    name: 'DataBindingClassView',
+    component: () =>
+      import(/* webpackChunkName: "databinding", webpackPrefetch: true  */ '../views/1_databinfding/DataBindingClassView.vue')
+  },
+  {
+    path: '/databinding/style',
+    name: 'DataBindingStyleView',
+    component: () =>
+      import(/* webpackChunkName: "databinding", webpackPrefetch: true  */ '../views/1_databinfding/DataBindingStyleView.vue')
   }
 ]
 
