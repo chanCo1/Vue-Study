@@ -159,11 +159,29 @@
       </div>
     </form>
   </div>
+  <hr />
+
+  <!-- TODO: Directives -->
+  <h2>유저 이름은 {{ userName }}</h2>
+  <button @click="changeName">이름변경</button>
+  <!-- v-pre => 컴파일에서 제외, 그대로 출력 -->
+  <h3 v-pre>{{ userName }}</h3>
+
+  <input v-focus type="text" />
+  highlight => <input v-highlight type="text" />
+  <hr />
+
+  <!-- TODO: Computed -->
+  <h2>{{ address }}</h2>
+  <h2>computed >> 내가 받은 점수: {{ totalScore }}</h2>
+  <h2>method >> 내가 받은 점수: {{ getTotalScore2() }}</h2>
 </template>
 
+<!-- JS -->
 <script>
 export default {
   name: 'App',
+
   data() {
     return {
       userName: 'chanCo',
@@ -203,10 +221,20 @@ export default {
         { label: '자장면', code: 'J' },
         { label: '짬뽕', code: 'JB' },
         { label: '탕수육', code: 'TS' }
-      ]
+      ],
+      address1: '성남시',
+      address2: '분당구',
+      address3: '정자동',
+      grade: {
+        math: 70,
+        kor: 90,
+        eng: 50,
+        sci: 55
+      }
     };
   },
   components: {},
+
   methods: {
     add(num) {
       return this.user.age + num;
@@ -229,11 +257,48 @@ export default {
     },
     setValue(e) {
       this.user.name = e.target.value;
+    },
+    getTotalScore2() {
+      const { math, eng, kor, sci } = this.grade;
+      return math + eng + kor + sci;
+    }
+  },
+
+  directives: {
+    focus: {
+      mounted(el) {
+        el.focus();
+      }
+    },
+    highlight: {
+      mounted(el) {
+        console.log({ el });
+        el.onclick = () => {
+          el.style.background = 'salmon';
+          el.style.color = '#fff';
+        };
+      }
+    }
+  },
+  /**
+   * @description method와 computed의 차이
+   * - computed는 도출한 값이 캐시가 된다
+   * - method는 값의 변화가 있을 때 마다 계속 실행된다
+   *
+   */
+  computed: {
+    address() {
+      return `${this.address1}/ ${this.address2}/ ${this.address3}`;
+    },
+    totalScore() {
+      const { math, eng, kor, sci } = this.grade;
+      return math + eng + kor + sci;
     }
   }
 };
 </script>
 
+<!-- Style -->
 <style>
 .title {
   color: red;
