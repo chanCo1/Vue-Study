@@ -175,15 +175,49 @@
   <h2>{{ address }}</h2>
   <h2>computed >> 내가 받은 점수: {{ totalScore }}</h2>
   <h2>method >> 내가 받은 점수: {{ getTotalScore2() }}</h2>
+  <hr />
+
+  <!-- TODO: Watch -->
+  <h2>current Money :: {{ money }}</h2>
+  <button @click="money += 100">earn money</button>
+  <button @click="money -= 100">spend money</button>
+
+  <h2>{{ receit }}</h2>
+  <button @click="receit.food += 500">earn money</button>
+  <br />
+
+  <input type="text" v-model="userName" />
+  <hr />
+
+  <!-- TODO: component -->
+  <GreetingUser
+    :userName="userName"
+    :visitCount="visitCount"
+    :siteInfo="siteInfo"
+  />
+  <GreetingUser userName="dooli" />
+  <GreetingUser userName="pororo" />
+  <GreetingUser />
+  <button @click="changeName()">change</button>
 </template>
 
 <!-- JS -->
 <script>
+import GreetingUser from './components/GreetingUser';
+
 export default {
   name: 'App',
-
+  /**
+   * data
+   */
   data() {
     return {
+      receit: {
+        food: 3000,
+        fee: 2000,
+        fare: 10000
+      },
+      money: 0,
       userName: 'chanCo',
       number: 0,
       dynamic: 'content',
@@ -230,11 +264,19 @@ export default {
         kor: 90,
         eng: 50,
         sci: 55
+      },
+      visitCount: 25,
+      siteInfo: {
+        name: 'Vue World',
+        teacher: 'chanCo',
+        subject: 'Front-End'
       }
     };
   },
-  components: {},
 
+  /**
+   * methods
+   */
   methods: {
     add(num) {
       return this.user.age + num;
@@ -264,6 +306,9 @@ export default {
     }
   },
 
+  /**
+   * directives
+   */
   directives: {
     focus: {
       mounted(el) {
@@ -272,7 +317,6 @@ export default {
     },
     highlight: {
       mounted(el) {
-        console.log({ el });
         el.onclick = () => {
           el.style.background = 'salmon';
           el.style.color = '#fff';
@@ -284,7 +328,6 @@ export default {
    * @description method와 computed의 차이
    * - computed는 도출한 값이 캐시가 된다
    * - method는 값의 변화가 있을 때 마다 계속 실행된다
-   *
    */
   computed: {
     address() {
@@ -294,6 +337,36 @@ export default {
       const { math, eng, kor, sci } = this.grade;
       return math + eng + kor + sci;
     }
+  },
+
+  /**
+   * watch
+   */
+  watch: {
+    userName: {
+      handler(newValue) {
+        console.log(newValue);
+      },
+      immediate: true
+    },
+    money(newValue, oldValue) {
+      if (newValue > 1000 && newValue > oldValue) console.log('done');
+      if (oldValue < 500 && newValue < oldValue) console.log('save money');
+    },
+    receit: {
+      // console.log('변함', newValue, oldValue);
+      handler(newValue) {
+        console.log(newValue);
+      },
+      deep: true
+    }
+  },
+
+  /**
+   * component
+   */
+  components: {
+    GreetingUser
   }
 };
 </script>
