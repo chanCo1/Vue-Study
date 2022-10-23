@@ -5,12 +5,18 @@
     <h1 class="title">This is Title.</h1>
     <h2 :class="dynamic">??</h2>
     <img :src="image.src" :alt="image.alt" />
+    <hr />
 
     <!-- TODO: CSS클래스 -->
     <h2 :class="isDone ? 'line-through' : 'highlight'">line-through</h2>
     <h2 :class="textDecoration">line-through</h2>
-    <p :class="{ highlight: isDone, 'text-red': userName === 'chanCo' }">요요</p>
-    <p :class="['content', userName === 'chanCo' ? 'green' : 'line-through']">ㅋㅋㅋㅋㅋㅋ</p>
+    <p :class="{ highlight: isDone, 'text-red': userName === 'chanCo' }">
+      요요
+    </p>
+    <p :class="['content', userName === 'chanCo' ? 'green' : 'line-through']">
+      ㅋㅋㅋㅋㅋㅋ
+    </p>
+    <hr />
 
     <!-- TODO: 조건부 렌더링 -->
     <h2 v-once v-text="user.name"></h2>
@@ -21,7 +27,9 @@
     <p v-else>이름을 보여줄 수 없다</p>
 
     <p v-if="showName">{{ user.name }} IF</p>
-    <p v-show="showName">{{ user.name }} 이건 css를 건들여서 display: none 처리를 함</p>
+    <p v-show="showName">
+      {{ user.name }} 이건 css를 건들여서 display: none 처리를 함
+    </p>
 
     <ul>
       <template v-if="question === 'frontend'">
@@ -36,6 +44,121 @@
       </template>
     </ul>
   </div>
+  <hr />
+
+  <!-- TODO: 리스트 렌더링 -->
+  <p>{{ fruits }}</p>
+  <ul>
+    <li v-for="(fruit, i) in fruits" :key="i">{{ fruit }}</li>
+  </ul>
+
+  <h2 v-for="(value, key, i) in user" :key="i">
+    {{ key }} // {{ value }} , {{ i }}
+  </h2>
+
+  <p v-for="n in 10" :key="n">{{ n }}</p>
+
+  <div v-for="(animal, i) in animals" :key="i">
+    <h2>{{ animal.name }}</h2>
+    <p>{{ animal.size }}</p>
+    <ul>
+      <li v-for="(food, i) in animal.food" :key="i">{{ food }}</li>
+    </ul>
+  </div>
+
+  <div>
+    <ul>
+      <li
+        v-for="(city, i) in cities.filter((c) => c.province === '경상도')"
+        :key="i"
+      >
+        {{ city.name }}
+      </li>
+      <br />
+      <li v-for="(city, i) in cities" :key="i">
+        <span v-if="city.province === '경상도'">{{ city.name }}</span>
+      </li>
+      <br />
+      <template v-for="(city, i) in cities" :key="i">
+        <li v-if="city.province === '경기도'">{{ city.name }}</li>
+      </template>
+    </ul>
+  </div>
+
+  <!-- TODO: 메서드 -->
+  <p>더하기 10 >> {{ add(10) }}</p>
+  <p>동갑의 10명이 있다면 나의 총 합은 {{ multiply(user.age) }}</p>
+  <p>{{ getTotalScore(100) }}</p>
+
+  <!-- TODO: 이벤트 -->
+  <h3>HAHAHAHA {{ userName }}</h3>
+  <button @click.middle="changeName">change name</button>
+  <button @mouseover="userName = '요요요'" @mouseleave="userName = '베벱베ㅔ'">
+    change name
+  </button>
+  <br />
+  <a @click.prevent="movePage" href="https://www.naver.com">naver</a>
+
+  <h4>{{ number }}</h4>
+  <button @click="increase($event, 1)">1증가</button>
+  <hr />
+
+  <!-- TODO: FORM 핸들링 -->
+  <div>
+    {{ user }}
+    <form action="">
+      <div>
+        <label for="name">이름</label>
+        <input type="text" id="name" @input="setValue" />
+        <h2>{{ user.name }}</h2>
+      </div>
+
+      <div>
+        <label for="city">사는 곳</label>
+        <select name="" id="city" v-model="user.city">
+          <option value="">선택하세요</option>
+          <option value="seoul">서울</option>
+          <option value="daejeon">대전</option>
+          <option value="daegu">대구</option>
+          <option value="busan">부산</option>
+          <option value="gwangju">광주</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="food">좋아하는 음식</label>
+        <select name="" id="food" v-model="user.favorite" multiple>
+          <option
+            v-for="(option, i) in foodOptions"
+            :key="i"
+            :value="option.code"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="job">직업</label>
+        <input
+          type="checkbox"
+          value="programmer"
+          v-model="user.job2"
+        />프로그래머
+        <input type="checkbox" value="singer" v-model="user.job2" />가수
+        <input type="checkbox" value="teacher" v-model="user.job2" />선생님
+      </div>
+
+      <div>
+        <label for="gender">성별</label>
+        남<input type="radio" value="male" v-model="user.gender" /> 여<input
+          type="radio"
+          value="female"
+          v-model="user.gender"
+        />
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -44,6 +167,7 @@ export default {
   data() {
     return {
       userName: 'chanCo',
+      number: 0,
       dynamic: 'content',
       image: {
         src: 'https://placeimg.com/200/200/any',
@@ -53,14 +177,60 @@ export default {
       isDone: true,
       user: {
         name: 'chanCo',
-        age: 100,
-        job: 'developer'
+        age: 0,
+        job: 'developer',
+        job2: [],
+        city: 'seoul',
+        favorite: []
       },
       showName: true,
-      question: 'frontend'
+      question: 'frontend',
+      fruits: ['banana', 'strawberry', 'apple', 'melon'],
+      animals: [
+        { name: 'hama', size: 'big', food: ['human', 'watermelon'] },
+        { name: 'pig', size: 'medium', food: ['grass', 'pizza'] },
+        { name: 'bird', size: 'small', food: ['ant', 'leaf'] }
+      ],
+      cities: [
+        { name: '서울', province: '경기도' },
+        { name: '대전', province: '충청도' },
+        { name: '대구', province: '경상도' },
+        { name: '부산', province: '경상도' },
+        { name: '인천', province: '경기도' },
+        { name: '광주', province: '전라도' }
+      ],
+      foodOptions: [
+        { label: '자장면', code: 'J' },
+        { label: '짬뽕', code: 'JB' },
+        { label: '탕수육', code: 'TS' }
+      ]
     };
   },
-  components: {}
+  components: {},
+  methods: {
+    add(num) {
+      return this.user.age + num;
+    },
+    multiply(num1, num2 = 10) {
+      return num1 * num2;
+    },
+    getTotalScore(num) {
+      return this.multiply(num, num);
+    },
+    changeName() {
+      this.userName = '퓡신';
+    },
+    movePage() {
+      confirm('페이지 이동?') ? console.log('이동') : console.log('안함');
+    },
+    increase(e, num) {
+      e.preventDefault();
+      this.number += num;
+    },
+    setValue(e) {
+      this.user.name = e.target.value;
+    }
+  }
 };
 </script>
 
