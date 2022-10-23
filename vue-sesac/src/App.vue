@@ -195,20 +195,88 @@
     :visitCount="visitCount"
     :siteInfo="siteInfo"
   />
-  <GreetingUser userName="dooli" />
+  <!-- <GreetingUser userName="dooli" />
   <GreetingUser userName="pororo" />
-  <GreetingUser />
+  <GreetingUser /> -->
   <button @click="changeName()">change</button>
+
+  <ProductList :products="products" />
+
+  <button @click="displayDetail = true">show detail</button>
+  <DetailView
+    v-if="displayDetail"
+    :displayDetail="displayDetail"
+    @closeDetail="close"
+    @sendData="showData"
+  />
+
+  <CompLevel1 />
+
+  <button @click="activeTab = 'Menu1'">menu1</button>
+  <button @click="activeTab = 'Menu2'">menu2</button>
+  <button @click="activeTab = 'Menu3'">menu3</button>
+
+  <!-- <Menu1 v-if="activeTab === 'Menu1'" />
+  <Menu2 v-if="activeTab === 'Menu2'" />
+  <Menu3 v-if="activeTab === 'Menu3'" /> -->
+  <keep-alive>
+    <component :is="activeTab"></component>
+  </keep-alive>
+
+  <!-- slot -->
+  <CardView>
+    <template v-slot:header>
+      <h3>Random Image</h3>
+    </template>
+    <template v-slot:body>
+      <img src="https://placeimg.com/100/100/any" alt="" />
+    </template>
+    <template v-slot:footer>
+      <small>Thank u</small>
+    </template>
+  </CardView>
+  <!-- <CardView>
+    <img src="https://placeimg.com/100/100/any" alt="" />
+  </CardView>
+  <CardView>
+    <ul>
+      <li>짬뽕</li>
+      <li>짜장</li>
+    </ul>
+  </CardView>
+  <CardView></CardView> -->
 </template>
 
 <!-- JS -->
 <script>
-import GreetingUser from './components/GreetingUser';
+import GreetingUser from './components/GreetingUser.vue';
+import ProductList from './components/ProductList.vue';
+import DetailView from './components/DetailView.vue';
+import CompLevel1 from './components/provide-inject/CompLevel1.vue';
+import Menu1 from './components/tabItems/Menu1.vue';
+import Menu2 from './components/tabItems/Menu2.vue';
+import Menu3 from './components/tabItems/Menu3.vue';
+import CardView from './components/slot/CardView.vue';
 
 export default {
   name: 'App',
+
   /**
-   * data
+   * @component
+   */
+  components: {
+    GreetingUser,
+    ProductList,
+    DetailView,
+    CompLevel1,
+    Menu1,
+    Menu2,
+    Menu3,
+    CardView
+  },
+
+  /**
+   * @data
    */
   data() {
     return {
@@ -270,7 +338,16 @@ export default {
         name: 'Vue World',
         teacher: 'chanCo',
         subject: 'Front-End'
-      }
+      },
+      products: [
+        { id: 0, name: 'TV', price: 500000, company: 'LG' },
+        { id: 1, name: '전자레인지', price: 200000, company: '삼성' },
+        { id: 2, name: '가스오븐', price: 300000, company: '한화' },
+        { id: 3, name: '냉장고', price: 50000, company: '대우' },
+        { id: 4, name: '에어컨', price: 100000, company: '해태' }
+      ],
+      displayDetail: false,
+      activeTab: 'Menu1'
     };
   },
 
@@ -303,6 +380,12 @@ export default {
     getTotalScore2() {
       const { math, eng, kor, sci } = this.grade;
       return math + eng + kor + sci;
+    },
+    close() {
+      this.displayDetail = false;
+    },
+    showData(data) {
+      console.log(data);
     }
   },
 
@@ -362,11 +445,10 @@ export default {
     }
   },
 
-  /**
-   * component
-   */
-  components: {
-    GreetingUser
+  provide() {
+    return {
+      name: this.userName
+    };
   }
 };
 </script>
@@ -374,8 +456,8 @@ export default {
 <!-- Style -->
 <style>
 .title {
-  color: red;
-  background-color: yellow;
+  /* color: red;
+  background-color: yellow; */
 }
 
 .content {
